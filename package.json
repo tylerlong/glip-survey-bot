@@ -1,0 +1,9 @@
+{
+  "name": "glip-survey-bot",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "standard": "^11.0.1",
+    "yarn-upgrade-all": "^0.3.0"
+  }
+}
