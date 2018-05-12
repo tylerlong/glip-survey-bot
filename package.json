@@ -12,6 +12,7 @@
     "yarn-upgrade-all": "^0.3.0"
   },
   "dependencies": {
-    "markdown-it": "^8.4.1"
+    "markdown-it": "^8.4.1",
+    "onml": "^0.4.1"
   }
 }
