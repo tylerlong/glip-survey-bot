@@ -4,12 +4,15 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "prepush": "yarn test"
+    "prepush": "yarn test",
+    "start": "node -r babel-register src/index.js"
   },
   "dependencies": {
+    "dotenv": "^5.0.1",
     "markdown-it": "^8.4.1",
     "onml": "^0.4.1",
-    "ramda": "^0.25.0"
+    "ramda": "^0.25.0",
+    "ringcentral-js-concise": "^0.4.0"
   },
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
