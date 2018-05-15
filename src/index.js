@@ -28,8 +28,11 @@ rc.token(JSON.parse(process.env.RINGCENTRAL_TOKEN))
     const pureMessage = R.trim(R.replace(mentionAnyRegex, '', message.body.text))
     try {
       let reply = handle(pureMessage)
+      if (Array.isArray(reply)) {
+        reply = reply.join('\n\n')
+      }
       if (groupMessage) {
-        reply = `![:Person](${message.body.creatorId}) ` + reply + ` (If you want to talk to me, please ![:Person](${botId}) because this conversation has more than the two of us.)`
+        reply = `![:Person](${message.body.creatorId}) ` + reply + `\n\nIf you want to talk to me, please @ mention me (![:Person](${botId})) because this conversation has more than the two of us.`
       }
       await rc.post(`/restapi/v1.0/glip/groups/${groupId}/posts`, {
         text: reply
