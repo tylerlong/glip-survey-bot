@@ -70,6 +70,7 @@ class Handler {
         return `Please select 1 - ${this.options.length}, ${text} is out of range.`
       }
       const result = [`You selected ${text}. ${this.options[parseInt(text) - 1]}`]
+      // todo: save user's option
       this.options = undefined
       return R.concat(result, this.proceed())
     }
