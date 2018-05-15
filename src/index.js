@@ -3,6 +3,8 @@ import PubNub from 'ringcentral-js-concise/src/pubnub'
 import dotenv from 'dotenv'
 import * as R from 'ramda'
 
+import { handle } from './handler'
+
 dotenv.config()
 const rc = new RingCentral('', '', process.env.RINGCENTRAL_SERVER_URL)
 rc.token(JSON.parse(process.env.RINGCENTRAL_TOKEN))
@@ -22,20 +24,18 @@ rc.token(JSON.parse(process.env.RINGCENTRAL_TOKEN))
     if (groupMessage && !R.test(mentionBotRegex, message.body.text)) {
       return // It is a group message which doesn't mention the bot
     }
-    console.log(message)
     const mentionAnyRegex = /!\[:(?:Person|Team)\]\(\d+\)/g
     const pureMessage = R.trim(R.replace(mentionAnyRegex, '', message.body.text))
-    console.log(pureMessage)
     try {
-      let reply = 'from the bot'
+      let reply = handle(pureMessage)
       if (groupMessage) {
-        reply = `![:Person](${message.body.creatorId}) ` + reply
+        reply = `![:Person](${message.body.creatorId}) ` + reply + ` (If you want to talk to me, please ![:Person](${botId}) because this conversation has more than the two of us.)`
       }
       await rc.post(`/restapi/v1.0/glip/groups/${groupId}/posts`, {
         text: reply
       })
     } catch (e) {
-      console.log(e.response.data)
+      console.error(e.response.data)
     }
   })
   await pubnub.subscribe()
