@@ -11,8 +11,9 @@ const json2csvParser = new json2csv.Parser()
 const markdown = fs.readFileSync(path.join(__dirname, '..', '/survey.md'), 'utf-8')
 
 class Handler {
-  constructor (userId) {
+  constructor (userId, rc) {
     this.userId = userId
+    this.rc = rc
     this.flow = parse(markdown)
   }
 
@@ -50,12 +51,16 @@ class Handler {
   async report () {
     const jsons = []
     const files = await glob(path.join(__dirname, '..', 'result', '*.json'))
-    R.forEach(file => {
+    for (const file of files) {
       const json = JSON.parse(fs.readFileSync(file, 'utf-8'))
       const userId = path.basename(file, path.extname(file))
       json.userId = userId
+      const r = await this.rc.get(`/restapi/v1.0/glip/persons/${userId}`)
+      json.firstName = r.data.firstName
+      json.lastName = r.data.lastName
+      json.email = r.data.email
       jsons.push(json)
-    }, files)
+    }
     return {
       name: 'survey-report.tsv',
       content: json2csvParser.parse(jsons)
@@ -115,14 +120,14 @@ class Handler {
 }
 
 const handlers = {}
-const getHandler = userId => {
+const getHandler = (userId, rc) => {
   if (handlers[userId] === undefined) {
-    handlers[userId] = new Handler(userId)
+    handlers[userId] = new Handler(userId, rc)
   }
   return handlers[userId]
 }
 
-export const handle = (text, creatorId) => {
+export const handle = (text, creatorId, rc) => {
   text = R.toLower(text)
-  return getHandler(creatorId).handle(text)
+  return getHandler(creatorId, rc).handle(text)
 }
