@@ -38,7 +38,7 @@ rc.token(JSON.parse(process.env.RINGCENTRAL_TOKEN))
         text: reply
       })
     } catch (e) {
-      console.error(e.response.data)
+      console.error(e)
     }
   })
   await pubnub.subscribe()

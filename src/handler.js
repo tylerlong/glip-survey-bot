@@ -5,50 +5,87 @@ import path from 'path'
 import { parse } from './parser'
 
 const markdown = fs.readFileSync(path.join(__dirname, '..', '/survey.md'), 'utf-8')
-const flow = parse(markdown)
 
-const steps = {}
+class Handler {
+  constructor () {
+    this.flow = parse(markdown)
+  }
 
-export const handle = (text, creatorId) => {
-  text = R.toLower(text)
-  switch (text) {
-    case 'help':
-      return `I am a survey bot. The current survey topic is **${flow[0][2]}**. Please reply **start** to start / restart the survey.`
-    case 'start':
-      steps[creatorId] = 1
-      return nextSteps(creatorId)
-    default:
-      return `I couldn't understand you. Please type “help” to get more information on how I can help.`
+  forward () {
+    this.flow = R.tail(this.flow)
+    if (this.flow.length === 0) {
+      console.log('done')
+    }
+  }
+
+  currentElement () {
+    if (this.flow.length === 0) {
+      return undefined
+    }
+    return this.flow[0][0]
+  }
+
+  currentContent () {
+    if (this.flow.length === 0) {
+      return undefined
+    }
+    return this.flow[0][2]
+  }
+
+  proceed () {
+    const result = []
+    while (R.contains(this.currentElement(), ['p', 'h2', 'h1'])) {
+      let content = this.currentContent()
+      if (this.currentElement() === 'h1') {
+        content = `**${content}**`
+      }
+      if (this.currentElement() === 'h2') {
+        content = `**Q: ${content}**`
+      }
+      result.push(content)
+      this.forward()
+    }
+    if (R.contains(this.currentElement(), ['ul', 'ol'])) {
+      this.options = R.pipe(
+        R.tail,
+        R.tail,
+        R.map(o => o[2])
+      )(this.flow[0])
+      result.push(R.addIndex(R.map)((o, idx) => `${idx + 1}. ${o}`, this.options).join('\n'))
+      this.forward()
+    }
+    return result
+  }
+
+  handle (text) {
+    if (text === 'help') {
+      return `I am a survey bot. Please reply **start** to start / restart the survey.`
+    }
+    if (text === 'start') {
+      this.flow = parse(markdown)
+      return this.proceed()
+    }
+    if (this.options && R.test(/\d+/, text)) {
+      if (parseInt(text) > this.options.length) { // out of index
+        return `Please select 1 - ${this.options.length}, ${text} is out of range.`
+      }
+      const result = [`You selected ${text}. ${this.options[parseInt(text) - 1]}`]
+      this.options = undefined
+      return R.concat(result, this.proceed())
+    }
+    return `I couldn't understand you. Please type “help” to get more information on how I can help.`
   }
 }
 
-const nextSteps = creatorId => {
-  const result = []
-  let currentStep = steps[creatorId]
-  while (flow[currentStep][0] === 'p') {
-    result.push(flow[currentStep][2])
-    currentStep += 1
+const handlers = {}
+const getHandler = userId => {
+  if (handlers[userId] === undefined) {
+    handlers[userId] = new Handler()
   }
+  return handlers[userId]
+}
 
-  if (flow[currentStep][0] === 'h2') {
-    result.push(`**Q: ${flow[currentStep][2]}**`)
-    currentStep += 1
-    while (flow[currentStep][0] === 'p') {
-      result.push(flow[currentStep][2])
-      currentStep += 1
-    }
-    if (flow[currentStep][0] === 'ul') {
-      const options = R.pipe(
-        R.tail,
-        R.tail,
-        R.map(li => li[2]),
-        R.addIndex(R.map)((o, idx) => `${idx}. ${o}`)
-      )(flow[currentStep]).join('\n')
-      result.push(options)
-      currentStep += 1
-    }
-  }
-
-  steps[creatorId] = currentStep
-  return result
+export const handle = (text, creatorId) => {
+  text = R.toLower(text)
+  return getHandler(creatorId).handle(text)
 }
