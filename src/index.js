@@ -22,8 +22,13 @@ rc.token(JSON.parse(process.env.RINGCENTRAL_TOKEN))
       return // It is a group message which doesn't mention the bot
     }
     console.log(message)
+    const mentionAnyRegex = /!\[:(?:Person|Team)\]\(\d+\)/g
+    const pureMessage = R.trim(R.replace(mentionAnyRegex, '', message.body.text))
+    console.log(pureMessage)
     try {
-      await rc.post(`/restapi/v1.0/glip/groups/${groupId}/posts`, { text: `![:Person](${message.body.creatorId}) from the bot` })
+      await rc.post(`/restapi/v1.0/glip/groups/${groupId}/posts`, {
+        text: `![:Person](${message.body.creatorId}) from the bot`
+      })
     } catch (e) {
       console.log(e.response.data)
     }
