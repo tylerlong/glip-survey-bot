@@ -32,3 +32,8 @@ Edit [survey.md](survey.md) file. Rules:
 ```
 yarn start
 ```
+
+
+## Where is user input saved
+
+`result/*.json`

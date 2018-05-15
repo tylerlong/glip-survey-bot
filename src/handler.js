@@ -71,11 +71,17 @@ class Handler {
 
   handle (text) {
     if (text === 'help') {
-      return `I am a survey bot. Please reply **start** to start / restart the survey.`
+      return `I am a survey bot. Please reply **start** to start / restart the survey. Reply **download** to download the survey report`
     }
     if (text === 'start') {
       this.flow = parse(markdown)
       return this.proceed()
+    }
+    if (text === 'download') {
+      return {
+        name: 'test.json',
+        content: fs.readFileSync(path.join(__dirname, '..', 'result', '230919004.json'))
+      }
     }
     if (this.options && R.test(/\d+/, text)) {
       if (parseInt(text) > this.options.length) { // out of index

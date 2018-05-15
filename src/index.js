@@ -31,6 +31,13 @@ rc.token(JSON.parse(process.env.RINGCENTRAL_TOKEN))
       if (Array.isArray(reply)) {
         reply = reply.join('\n\n')
       }
+      if (reply.name) { // upload file
+        await rc.post('/restapi/v1.0/glip/files', reply.content, {
+          groupId,
+          name: reply.name
+        })
+        return
+      }
       if (groupMessage) {
         reply = `![:Person](${message.body.creatorId}) ` + reply + `\n\nIf you want to talk to me, please @ mention me (![:Person](${botId})) because this conversation has more than the two of us.`
       }
