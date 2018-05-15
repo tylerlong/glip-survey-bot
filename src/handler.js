@@ -1,8 +1,12 @@
 import * as R from 'ramda'
 import fs from 'fs'
 import path from 'path'
+import glob from 'glob-promise'
+import json2csv from 'json2csv'
 
 import { parse } from './parser'
+
+const json2csvParser = new json2csv.Parser()
 
 const markdown = fs.readFileSync(path.join(__dirname, '..', '/survey.md'), 'utf-8')
 
@@ -43,6 +47,21 @@ class Handler {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
   }
 
+  async report () {
+    const jsons = []
+    const files = await glob(path.join(__dirname, '..', 'result', '*.json'))
+    R.forEach(file => {
+      const json = JSON.parse(fs.readFileSync(file, 'utf-8'))
+      const userId = path.basename(file, path.extname(file))
+      json.userId = userId
+      jsons.push(json)
+    }, files)
+    return {
+      name: 'survey-report.tsv',
+      content: json2csvParser.parse(jsons)
+    }
+  }
+
   proceed () {
     const result = []
     while (R.contains(this.currentElement(), ['p', 'h2', 'h1'])) {
@@ -69,7 +88,7 @@ class Handler {
     return result
   }
 
-  handle (text) {
+  async handle (text) {
     if (text === 'help') {
       return `I am a survey bot. Please reply **start** to start / restart the survey. Reply **download** to download the survey report`
     }
@@ -78,10 +97,7 @@ class Handler {
       return this.proceed()
     }
     if (text === 'download') {
-      return {
-        name: 'test.json',
-        content: fs.readFileSync(path.join(__dirname, '..', 'result', '230919004.json'))
-      }
+      return this.report()
     }
     if (this.options && R.test(/\d+/, text)) {
       if (parseInt(text) > this.options.length) { // out of index

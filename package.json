@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "dotenv": "^5.0.1",
+    "glob-promise": "^3.4.0",
     "json2csv": "^4.1.2",
     "markdown-it": "^8.4.1",
     "onml": "^0.4.1",

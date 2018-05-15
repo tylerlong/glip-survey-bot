@@ -27,7 +27,7 @@ rc.token(JSON.parse(process.env.RINGCENTRAL_TOKEN))
     const mentionAnyRegex = /!\[:(?:Person|Team)\]\(\d+\)/g
     const pureMessage = R.trim(R.replace(mentionAnyRegex, '', message.body.text))
     try {
-      let reply = handle(pureMessage, message.body.creatorId)
+      let reply = await handle(pureMessage, message.body.creatorId)
       if (Array.isArray(reply)) {
         reply = reply.join('\n\n')
       }

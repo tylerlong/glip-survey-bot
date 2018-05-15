@@ -1,5 +1,7 @@
 /* eslint-env jest */
 import json2csv from 'json2csv'
+import glob from 'glob'
+import path from 'path'
 
 describe('demo', () => {
   test('report', async () => {
@@ -20,9 +22,13 @@ describe('demo', () => {
       }
     ]
 
-    const json2csvParser = new json2csv.Parser()
+    const json2csvParser = new json2csv.Parser({fields: ['size', 'car']})
     const csv = json2csvParser.parse(myCars)
 
     console.log(csv)
+
+    glob(path.join(__dirname, '..', 'result', '*.json'), (_, files) => {
+      console.log(files)
+    })
   })
 })
