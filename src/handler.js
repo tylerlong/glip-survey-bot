@@ -7,7 +7,8 @@ import { parse } from './parser'
 const markdown = fs.readFileSync(path.join(__dirname, '..', '/survey.md'), 'utf-8')
 
 class Handler {
-  constructor () {
+  constructor (userId) {
+    this.userId = userId
     this.flow = parse(markdown)
   }
 
@@ -32,6 +33,16 @@ class Handler {
     return this.flow[0][2]
   }
 
+  save (selection) {
+    const filePath = path.join(__dirname, '..', 'result', `${this.userId}.json`)
+    let data = {}
+    if (fs.existsSync(filePath)) {
+      data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+    }
+    data[this.question] = selection
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+  }
+
   proceed () {
     const result = []
     while (R.contains(this.currentElement(), ['p', 'h2', 'h1'])) {
@@ -40,6 +51,7 @@ class Handler {
         content = `**${content}**`
       }
       if (this.currentElement() === 'h2') {
+        this.question = content
         content = `**Q: ${content}**`
       }
       result.push(content)
@@ -69,8 +81,10 @@ class Handler {
       if (parseInt(text) > this.options.length) { // out of index
         return `Please select 1 - ${this.options.length}, ${text} is out of range.`
       }
-      const result = [`You selected ${text}. ${this.options[parseInt(text) - 1]}`]
-      // todo: save user's option
+      const selection = this.options[parseInt(text) - 1]
+      const result = [`You selected ${text}. ${selection}`]
+      this.save(selection)
+      this.question = undefined
       this.options = undefined
       return R.concat(result, this.proceed())
     }
@@ -81,7 +95,7 @@ class Handler {
 const handlers = {}
 const getHandler = userId => {
   if (handlers[userId] === undefined) {
-    handlers[userId] = new Handler()
+    handlers[userId] = new Handler(userId)
   }
   return handlers[userId]
 }
