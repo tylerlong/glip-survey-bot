@@ -11,7 +11,7 @@ describe('parser', () => {
     expect(result).toEqual([ [ 'h1', {}, 'My awesome survey' ],
       [ 'p',
         {},
-        'Hi there, here I am conducting a survey. I will ask you some questions. For each question please choose your answer from a predefined list by replying with A, B, C...etc.' ],
+        'Hi there, here I am conducting a survey. I will ask you some questions. For each question please choose your answer from a predefined list by replying with 0, 1, 2, 3...etc.' ],
       [ 'p',
         {},
         'At the end of the survey, we will ask you two questions about your t-shirt size and your gender, because we want to offer you a t-shirt for free!' ],
