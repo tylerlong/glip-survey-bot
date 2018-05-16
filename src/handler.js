@@ -76,7 +76,7 @@ class Handler {
 
   proceed () {
     const result = []
-    while (R.contains(this.currentElement(), ['p', 'h2', 'h1'])) {
+    while (!R.contains(this.currentElement(), ['ul', 'ol'])) {
       let content = this.currentContent()
       if (this.currentElement() === 'h1') {
         content = `**${content}**`
@@ -87,6 +87,9 @@ class Handler {
       }
       result.push(content)
       this.forward()
+      if (this.flow.length === 0) {
+        break
+      }
     }
     if (R.contains(this.currentElement(), ['ul', 'ol'])) {
       this.options = R.pipe(

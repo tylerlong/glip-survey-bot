@@ -4,6 +4,8 @@ Hi there, here I am conducting a survey. I will ask you some questions. For each
 
 At the end of the survey, we will ask you two questions about your t-shirt size and your gender, because we want to offer you a t-shirt for free!
 
+### heading 3
+
 
 ## Which color do you like?
 
@@ -19,6 +21,9 @@ At the end of the survey, we will ask you two questions about your t-shirt size 
 - Cat
 - Fish
 - Bird
+
+
+**Now it's time for the questions for your t-shirt!**
 
 
 ## Which t-shirt size do you want?
