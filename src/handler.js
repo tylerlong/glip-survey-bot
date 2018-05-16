@@ -56,13 +56,12 @@ class Handler {
       const userId = path.basename(file, path.extname(file))
       json.userId = userId
       const r = await this.rc.get(`/restapi/v1.0/glip/persons/${userId}`)
-      json.firstName = r.data.firstName
-      json.lastName = r.data.lastName
+      json.name = `${r.data.firstName} ${r.data.lastName}`
       json.email = r.data.email
       jsons.push(json)
     }
     return {
-      name: 'survey-report.tsv',
+      name: 'survey-report.csv',
       content: json2csvParser.parse(jsons)
     }
   }
