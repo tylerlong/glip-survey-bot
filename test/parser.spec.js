@@ -8,7 +8,7 @@ describe('parser', () => {
   test('parse', () => {
     const markdown = fs.readFileSync(path.join(__dirname, '..', '/survey.md'), 'utf-8')
     const result = parse(markdown)
-    // console.log(JSON.stringify(result, null, 2))
+    console.log(JSON.stringify(result, null, 2))
     expect(result).toEqual([ [ 'h1', {}, 'My awesome survey' ],
       [ 'p',
         {},

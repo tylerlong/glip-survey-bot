@@ -38,6 +38,6 @@ At the end of the survey, we will ask you two questions about your t-shirt size 
 - Female
 
 
-You have done the survey! Thank you very much for your input! Reply "download" if you want to see the survey report.
+You have done the survey! Thank you very much for your input! Reply **download** if you want to see the survey report.
 
 Bye for now and see you next time!

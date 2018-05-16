@@ -14,7 +14,8 @@
     "markdown-it": "^8.4.1",
     "onml": "^0.4.1",
     "ramda": "^0.25.0",
-    "ringcentral-js-concise": "^0.4.0"
+    "ringcentral-js-concise": "^0.4.0",
+    "turndown": "^4.0.2"
   },
   "devDependencies": {
     "babel-polyfill": "^6.26.0",

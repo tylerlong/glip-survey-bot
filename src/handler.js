@@ -3,8 +3,12 @@ import fs from 'fs'
 import path from 'path'
 import glob from 'glob-promise'
 import json2csv from 'json2csv'
+import onml from 'onml'
+import Turndown from 'turndown'
 
 import { parse } from './parser'
+
+const turndown = new Turndown({ headingStyle: 'atx' })
 
 const json2csvParser = new json2csv.Parser()
 
@@ -32,7 +36,14 @@ class Handler {
     if (this.flow.length === 0) {
       return undefined
     }
-    return this.flow[0][2]
+    let markdown = turndown.turndown(onml.s(this.flow[0]))
+    if (R.startsWith('## ', markdown)) {
+      markdown = markdown.substring(3)
+    }
+    if (R.startsWith('# ', markdown)) {
+      markdown = markdown.substring(2)
+    }
+    return markdown.trim()
   }
 
   save (selection) {
