@@ -24,7 +24,7 @@ Edit [survey.md](survey.md) file. Rules:
 - heading 1 is the survey topic
 - paragraph is some information the bot will send to user
 - heading 2 is a survey question
-- bullet list contains the answer options
+- bullet/ordered list contains the answer options
 
 
 ## How to run the bot

@@ -1,0 +1,1 @@
+- `<strong>` inside `<p>` are not supported
