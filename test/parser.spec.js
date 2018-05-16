@@ -8,6 +8,7 @@ describe('parser', () => {
   test('parse', () => {
     const markdown = fs.readFileSync(path.join(__dirname, '..', '/survey.md'), 'utf-8')
     const result = parse(markdown)
+    // console.log(JSON.stringify(result, null, 2))
     expect(result).toEqual([ [ 'h1', {}, 'My awesome survey' ],
       [ 'p',
         {},
@@ -41,8 +42,8 @@ describe('parser', () => {
         [ 'li', {}, 'triple extra large, XXXL' ] ],
       [ 'h2', {}, 'What is your gender?' ],
       [ 'ul', {}, [ 'li', {}, 'Male' ], [ 'li', {}, 'Female' ] ],
-      [ 'p',
-        {},
-        'Thank you very much for your input! Bye for now and see you next time!' ] ])
+      [ 'p', {}, 'You have done the survey! Thank you very much for your input! Reply "download" if you want to see the survey report.' ],
+      [ 'p', {}, 'Bye for now and see you next time!' ]
+    ])
   })
 })
