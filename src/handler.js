@@ -72,7 +72,7 @@ class Handler {
       }
       if (this.currentElement() === 'h2') {
         this.question = content
-        content = `**Q: ${content}**`
+        content = `**${content}**`
       }
       result.push(content)
       this.forward()
