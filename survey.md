@@ -1,6 +1,6 @@
 # My awesome survey
 
-Hi there, here I am conducting a survey. I will ask you some questions. For each question please choose your answer from a predefined list by replying with 0, 1, 2, 3...etc.
+Hi there, here I am conducting a survey. I will ask you some questions. For each question please choose your answer from a predefined list by replying with 1, 2, 3...etc.
 
 At the end of the survey, we will ask you two questions about your t-shirt size and your gender, because we want to offer you a t-shirt for free!
 
