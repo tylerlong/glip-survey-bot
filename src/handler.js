@@ -19,9 +19,6 @@ class Handler {
 
   forward () {
     this.flow = R.tail(this.flow)
-    if (this.flow.length === 0) {
-      console.log('done')
-    }
   }
 
   currentElement () {
